@@ -1,0 +1,7 @@
+function addDateToFlights() {
+    db.flights.find({ 'Date': {'$exists': false} }).forEach(function(data) {
+        db.flights.update({ _id: data._id}, {$set: 
+	    {"Date": new Date(data.Year+'-'+data.Month+'-'+data.DayofMonth)}
+        })
+    })
+}
