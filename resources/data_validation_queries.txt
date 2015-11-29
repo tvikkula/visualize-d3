@@ -1,0 +1,8 @@
+-- Test if there are any invalid CancellationCodes:
+db.flights.find({'CancellationCode': {'$nin': ['A','B','C','D']}, 'Cancelled': {'$ne': 0} })
+
+-- Test if there are invalid Cancellation codes:
+db.flights.find({'Cancelled': {'$nin': [0,1]} })
+
+-- Test if Origin is ever 'NA':
+db.flights.find({'Origin': {'$eq': 'NA'} })
