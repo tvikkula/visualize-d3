@@ -193,3 +193,100 @@ class Flights:
             {'$out': 'top_flights_cancellations_byday'}
         ]
         self.db.flights_cancellations_byday.aggregate(pipeline)
+
+    def getFlightCancelsByWeek(self):
+        '''
+        Get a collection of cancellation per week for each airport.
+
+        Function pipeline structure:
+            1. Get all Cancelled flights with origin != 'NA'
+            2. Group by Origin and Date, sum Cancelled.
+            3. Project Origin, Cancelled, Date, Reasoncode.
+            4. Sort by Cancellations.
+            5. Write to a new collection.
+        '''
+        pipeline = [
+            {
+                '$match': {
+                    'Cancelled': 1,
+                    'Origin': {'$ne': 'NA'}
+                }
+            },
+            {'$group': {
+                '_id': {'Origin': '$Origin',
+                        'WeekOfYear': {'$week': '$Date'}},
+                'cancelledTotal': {'$sum': '$Cancelled'},
+                'cancelledCarrier': {
+                    '$sum': {
+                        '$cond': [
+                            {
+                                '$eq': [
+                                    '$CancellationCode',
+                                    'A'
+                                ]
+                            },
+                            1,
+                            0
+                        ]
+                    }
+                },
+                'cancelledWeather': {
+                    '$sum': {
+                        '$cond': [
+                            {
+                                '$eq': [
+                                    '$CancellationCode',
+                                    'B'
+                                ]
+                            },
+                            1,
+                            0
+                        ]
+                    }
+                },
+                'cancelledNAS': {
+                    '$sum': {
+                        '$cond': [
+                            {
+                                '$eq': [
+                                    '$CancellationCode',
+                                    'C'
+                                ]
+                            },
+                            1,
+                            0
+                        ]
+                    }
+                },
+                'cancelledSecurity': {
+                    '$sum': {
+                        '$cond': [
+                            {
+                                '$eq': [
+                                    '$CancellationCode',
+                                    'D'
+                                ]
+                            },
+                            1,
+                            0
+                        ]
+                    }
+                },
+            }
+            },
+            {
+                '$project': {
+                    'Origin': '$_id.Origin',
+                    'WeekOfYear': '$_id.WeekOfYear',
+                    'cancelledTotal': 1,
+                    'cancelledCarrier': 1,
+                    'cancelledWeather': 1,
+                    'cancelledNAS': 1,
+                    'cancelledSecurity': 1,
+                    '_id': 0
+                }
+            },
+            {'$sort': {'cancelledTotal': -1}},
+            {'$out': 'flights_cancellations_byweek'}
+        ]
+        self.db.flights.aggregate(pipeline)
