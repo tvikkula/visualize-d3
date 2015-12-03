@@ -290,3 +290,29 @@ class Flights:
             {'$out': 'flights_cancellations_byweek'}
         ]
         self.db.flights.aggregate(pipeline)
+
+    def getTopFlightCancelsByWeek(self):
+        '''
+        Get top flight cancels by day. The top flight cancels are defined in
+        getTopCancelledPorts()-function.
+        '''
+
+        # Get top airports from top_flights_cancellations:
+        cursor = self.db.top_flights_cancellations.find(
+            {},
+            {'Origin': 1, '_id': 0}
+        )
+        # Make cursor into a list of its values:
+        topAirports = []
+        for ptr in cursor:
+            topAirports.append(ptr['Origin'])
+
+        pipeline = [
+            {
+                '$match': {
+                    'Origin': {'$in': topAirports}
+                }
+            },
+            {'$out': 'top_flights_cancellations_byweek'}
+        ]
+        self.db.flights_cancellations_byweek.aggregate(pipeline)
