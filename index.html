@@ -8,6 +8,13 @@
     <script src="js/plot.js"></script>
   </head>
   <body>
+    <select id="cancellationSelect">
+      <option value="cancelledTotal" selected="selected">Total cancellations</option>
+      <option value="cancelledCarrier">Carrier cancellations</option>
+      <option value="cancelledWeather">Weather cancellations</option>
+      <option value="cancelledNAS">NAS cancellations</option>
+      <option value="cancelledSecurity">Security cancellations</option>
+    </select>
     <script type="text/javascript">
       /*
       Use D3 (not dimple.js) to load the TSV file

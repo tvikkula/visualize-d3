@@ -1,66 +1,57 @@
-function draw(data) {
-    // Set margins                                                              
-    var margin = 75,
-        width = 1400 - margin,
-        height = 1800 - margin;
-    console.log(height);
-    // Set header                                                               
+var parseDate = d3.time.format("%U-%Y").parse;
+function draw(error, data) {
+    data.forEach(function(d) {
+	    d.value = +d.cancelledTotal;
+	    d.week = parseDate(d.WeekOfYear+'-2008');
+	});
+
     d3.select('body')
         .append('h2')
         .text('Flight cancellations');
 
-    // Create the svg                                                           
+    var margin = {top: 20, right: 20, bottom: 30, left: 50},
+	width = 1200 - margin.left - margin.right,
+        height = 1000 - margin.top - margin.bottom;
+
     var svg = d3.select('body')
-        .append('svg')
-	.attr('width', width + margin)
-	.attr('height', height + margin)
-        .append('g')
-	.attr('class', 'chart');
-
-    /* Dimple code:
-    var myChart = new dimple.chart(svg, data);
-    myChart.addCategoryAxis("x", "WeekOfYear");
-    myChart.addMeasureAxis("y", "cancelledTotal");
-    myChart.addSeries("Origin", dimple.plot.line);
-    //myChart.addLegend(60, 10, 510, 20, "right");
-    myChart.draw();
-    */
-    d3.select('svg')
-	.selectAll('cancels')
-	.data(data)
-	.enter()
-	.append('cancels')
-
-    var x = d3.time.scale()
-	.range([margin, width]);
-
-    var y = d3.scale.linear()
-	.range([height, margin]);
-
-    var color = d3.scale.category10();
-
-    var xaxis = d3.svg.axis()
-	.scale(x)
-	.orient('bottom');
-
-    var yaxis = d3.svg.axis()
-	.scale(y)
-	.orient('left');
-
-    var line = d3.svg.line();
-
-    d3.select('svg')
+	.append('svg')
+	.attr('width', width + margin.left + margin.right)
+	.attr('height', height + margin.top + margin.bottom)
 	.append('g')
-	.attr('class', 'x axis')
-	.attr('transform', 'translate(0,' + height + ')')
-	.call(xaxis);
+	.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-    d3.select('svg')
-        .append('g')
-        .attr('class', 'y axis')
-        .attr('transform', 'translate(' + margin + ',0)')
-        .call(yaxis);
+    d3.select('#cancellationSelect option').addEventListener('click', function(e) {
+	    
+	});
+	
+    // Dimple code:
+    var myChart = new dimple.chart(svg, data);
+    var x = myChart.addTimeAxis('x', 'week');
+    var y = myChart.addMeasureAxis('y', 'value');
+    var series = myChart.addSeries('Origin', dimple.plot.line);
+    series.addOrderRule('week');
+    myChart.addLegend(60, 10, 510, 20, 'right');
+    myChart.draw();
 
-    //    d3.selectAll('cancels')
-    //	.attr(
+    if (error) throw error;
+}
+
+function updateData(cancellationType) {
+    d3.csv('data/top_flights_cancellations_byweek.csv', function(error, data) {
+	    data.forEach(function(d) {
+		    d.value = +d[cancellationType];
+		    d.week = +d.WeekByYear;
+		});
+	    var myChart = new dimple.chart(d3.select('svg'), data);
+	    var x = myChart.addTimeAxis('x', 'week');
+	    var y = myChart.addMeasureAxis('y', 'value');
+	    var series = myChart.addSeries('Origin', dimple.plot.line);
+	    series.addOrderRule('week');
+	    myChart.addLegend(60, 10, 510, 20, 'right');
+	    myChart.draw();
+
+	    if (error) throw error;
+	});
+
+    
 }
