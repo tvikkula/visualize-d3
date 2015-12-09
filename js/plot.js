@@ -12,9 +12,9 @@ function draw(data) {
         .append('h2')
         .text('Flight cancellations');
 
-    var margin = {top: 20, right: 20, bottom: 30, left: 40},
+    var margin = {top: 10, right: 40, bottom: 20, left: 20},
 	width = 1100 - margin.left - margin.right,
-        height = 580 - margin.top - margin.bottom;
+        height = 530 - margin.top - margin.bottom;
 
     var svg = d3.select('body')
 	.append('svg')
@@ -26,42 +26,58 @@ function draw(data) {
     var myChart = new dimple.chart(svg, dataCache);
     var x = myChart.addTimeAxis('x', 'week', null, '%U');
     x.ticks = 52;
-    myChart.addMeasureAxis('y', 'value');
+    y = myChart.addMeasureAxis('y', 'value');
+    console.log(y);
+    y.overrideMin = 0.0;
+    y.overrideMax = 1500.0;
     var series = myChart.addSeries('Origin', dimple.plot.line);
     series.addOrderRule('week');
-    var myLegend = myChart.addLegend(60, 10, 510, 20, 'right');
+    var myLegend = myChart.addLegend(1000, 100, 60, 700, 'right');
+
     myChart.draw();
 
     myChart.legends = [];
 
-    svg.selectAll("title_text")
-	.data(["Click legend to","show/hide owners:"])
+    svg.selectAll('title_text')
+	.data(['Toggle legend to','show/hide airports:'])
 	.enter()
-	.append("text")
-	.attr("x", 499)
-	.attr("y", function (d, i) { return 90 + i * 14; })
+	.append('text')
+	.attr('x', 970)
+	.attr('y', function(d,i) {return 70 + i * 14;})
 	.text(function (d) { return d; });
 
+    var filterValues = dimple.getUniqueValues(dataCache, 'Origin');
 
-    var filterValues = dimple.getUniqueValues(dataCache, "Origin");
-    myLegend.shapes.selectAll("rect")
-	.on("click", function (e) {
-		updateLegend(myChart, filterValues, e);
+    myLegend.shapes.selectAll('rect')
+	.on('click', function (e) {
+		filterValues = updateLegend(myChart, filterValues, e, this);
+		drawChart(myChart, filterValues);
 	    });
 
     document.getElementById('cancellationSelect')
         .addEventListener('change', function(e) {
-                console.log(e.currentTarget.value);
-                updateData(e.currentTarget.value, myChart);
+		callback = function(isSecurity) {
+		    drawChart(myChart, filterValues, isSecurity);
+		}
+                updateData(e.currentTarget.value, myChart, callback);
             });
 }
 
+function drawChart(myChart, filterValues, isSecurity) {
+    if (isSecurity) {
+	myChart.axes[1].overrideMax = 100.0;
+    } else {
+	myChart.axes[1].overrideMax = 1500.0;
+    }
+    myChart.data = dimple.filterData(dataCache, 'Origin', filterValues);
+    myChart.draw(1000);
+}
+
 // Interactive legend from http://dimplejs.org/advanced_examples_viewer.html?id=advanced_interactive_legends
-function updateLegend(myChart, filterValues, e) {
-    // This indicates whether the item is already visible or not                                                                                                         
+function updateLegend(myChart, filterValues, e, self) {
     var hide = false;
     var newFilters = [];
-    // If the filters contain the clicked shape hide it                                                                                                                  
+    // If the filters contain the clicked shape hide it
     filterValues.forEach(function (f) {
 	    if (f === e.aggField.slice(-1)[0]) {
 		hide = true;
@@ -69,29 +85,33 @@ function updateLegend(myChart, filterValues, e) {
 		newFilters.push(f);
 	    }
 	});
-    // Hide the shape or show it                                                                                                                                         
+
+    // Hide the shape or show it
     if (hide) {
-	d3.select(this).style("opacity", 0.2);
+	d3.select(self).style('opacity', 0.2);
     } else {
 	newFilters.push(e.aggField.slice(-1)[0]);
-	d3.select(this).style("opacity", 0.8);
+	d3.select(self).style('opacity', 0.8);
     }
-    // Update the filters                                                                                                                                                
+
+    // Update the filters
     filterValues = newFilters;
-    // Filter the data                                                                                                                                                   
-    myChart.data = dimple.filterData(dataCache, "Origin", filterValues);
-    // Passing a duration parameter makes the chart animate. Without                                                                                                     
-    // it there is no transition                                                                                                                                         
-    myChart.draw(800);
+
+    return filterValues;
 }
-function updateData(cancellationType, myChart) {
+
+function updateData(cancellationType, myChart, callback) {
     d3.csv('data/top_flights_cancellations_byweek.csv', function(data) {
 	    data.forEach(function(d) {
 		    d.value = +d[cancellationType];
 		    d.week = parseDate(d.WeekOfYear+'-2008');
 		});
-	    myChart.data = data;
-	    myChart.draw(1000);
 	    dataCache = data;
+	    console.log(cancellationType);
+	    if (cancellationType == 'cancelledSecurity') {
+		callback(true);
+	    } else {
+		callback(false);
+	    }
 	});
 }
