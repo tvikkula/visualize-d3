@@ -158,7 +158,7 @@ class Flights:
         pipeline = [
             {
                 '$match': {
-                    'cancelledTotal': {'$gte': 2000}
+                    'cancelledTotal': {'$gte': 2800}
                 }
             },
             {'$out': 'top_flights_cancellations'}
