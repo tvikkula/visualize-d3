@@ -5,14 +5,10 @@ function draw(data) {
     dataCache = data;
     dataCache.forEach(function(d) {
 	    d.value = +d.cancelledTotal;
-	    d.week = parseDate(d.WeekOfYear+'-2008');
+	    d.Week = parseDate(d.WeekOfYear+'-2008');
 	});
 
-    d3.select('body')
-        .append('h2')
-        .text('Flight cancellations');
-
-    var margin = {top: 10, right: 40, bottom: 20, left: 20},
+    var margin = {top: 0, right: 40, bottom: 20, left: 20},
 	width = 1100 - margin.left - margin.right,
         height = 530 - margin.top - margin.bottom;
 
@@ -24,17 +20,18 @@ function draw(data) {
 	.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
     var myChart = new dimple.chart(svg, dataCache);
-    var x = myChart.addTimeAxis('x', 'week', null, '%U');
+    var x = myChart.addTimeAxis('x', 'Week', null, '%U');
     x.ticks = 52;
     y = myChart.addMeasureAxis('y', 'value');
     console.log(y);
     y.overrideMin = 0.0;
     y.overrideMax = 1500.0;
     var series = myChart.addSeries('Origin', dimple.plot.line);
-    series.addOrderRule('week');
+    series.addOrderRule('Week');
     var myLegend = myChart.addLegend(1000, 100, 60, 700, 'right');
 
     myChart.draw();
+    y.titleShape.text('Amount of cancelled flights');
 
     myChart.legends = [];
 
@@ -71,6 +68,7 @@ function drawChart(myChart, filterValues, isSecurity) {
     }
     myChart.data = dimple.filterData(dataCache, 'Origin', filterValues);
     myChart.draw(1000);
+    y.titleShape.text('Amount of cancelled flights');
 }
 
 // Interactive legend from http://dimplejs.org/advanced_examples_viewer.html?id=advanced_interactive_legends
@@ -104,7 +102,7 @@ function updateData(cancellationType, myChart, callback) {
     d3.csv('data/top_flights_cancellations_byweek.csv', function(data) {
 	    data.forEach(function(d) {
 		    d.value = +d[cancellationType];
-		    d.week = parseDate(d.WeekOfYear+'-2008');
+		    d.Week = parseDate(d.WeekOfYear+'-2008');
 		});
 	    dataCache = data;
 	    console.log(cancellationType);

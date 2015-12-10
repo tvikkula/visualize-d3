@@ -8,14 +8,18 @@
     <script src="js/plot.js"></script>
   </head>
   <body>
-    <p id="cancellationLabel">Select a type of cancellation:</p>
-    <select id="cancellationSelect">
-      <option value="cancelledTotal" selected="selected">Total cancellations</option>
-      <option value="cancelledCarrier">Carrier cancellations</option>
-      <option value="cancelledWeather">Weather cancellations</option>
-      <option value="cancelledNAS">NAS cancellations</option>
-      <option value="cancelledSecurity">Security cancellations</option>
-    </select>
+    <h2>Cancellation amounts and their reasons for a set of airports during year 2008</h2>
+    <p>Add description of the visualization here!Lorem Ipsum BlaadiblaaLorem Ipsum BlaadiblaaLorem Ipsum BlaadiblaaLorem Ipsum BlaadiblaaLorem Ipsum BlaadiblaaLorem Ipsum BlaadiblaaLorem Ipsum BlaadiblaaLorem Ipsum BlaadiblaaLorem Ipsum BlaadiblaaLorem Ipsum BlaadiblaaLorem Ipsum BlaadiblaaLorem Ipsum BlaadiblaaLorem Ipsum BlaadiblaaLorem Ipsum BlaadiblaaLorem Ipsum BlaadiblaaLorem Ipsum BlaadiblaaLorem Ipsum BlaadiblaaLorem Ipsum BlaadiblaaLorem Ipsum BlaadiblaaLorem Ipsum BlaadiblaaLorem Ipsum BlaadiblaaLorem Ipsum BlaadiblaaLorem Ipsum BlaadiblaaLorem Ipsum BlaadiblaaLorem Ipsum BlaadiblaaLorem Ipsum Blaadiblaa</p>
+    <div id="selectionarea" style="bottom:10px">
+      <p id="cancellationLabel">Select a reason for cancellation:</p>
+      <select id="cancellationSelect">
+	<option value="cancelledTotal" selected="selected">Total cancellations</option>
+	<option value="cancelledCarrier">Carrier cancellations</option>
+	<option value="cancelledWeather">Weather cancellations</option>
+	<option value="cancelledNAS">NAS cancellations</option>
+	<option value="cancelledSecurity">Security cancellations</option>
+      </select>
+    </div>
     <script type="text/javascript">
       /*
       Use D3 (not dimple.js) to load the TSV file
