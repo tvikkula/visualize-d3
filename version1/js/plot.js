@@ -53,28 +53,22 @@ function draw(data) {
 
     document.getElementById('cancellationSelect')
         .addEventListener('change', function(e) {
-		callback = function(cancellationType) {
-		    drawChart(myChart, filterValues, cancellationType);
+		callback = function(isSecurity) {
+		    drawChart(myChart, filterValues, isSecurity);
 		}
                 updateData(e.currentTarget.value, myChart, callback);
             });
 }
 
-function drawChart(myChart, filterValues, cancellationType) {
-    if (cancellationType !== 'cancelledTotal') {
+function drawChart(myChart, filterValues, isSecurity) {
+    if (isSecurity) {
 	myChart.axes[1].overrideMax = 100.0;
     } else {
 	myChart.axes[1].overrideMax = 1500.0;
     }
-
     myChart.data = dimple.filterData(dataCache, 'Origin', filterValues);
     myChart.draw(1000);
-
-    if (cancellationType !== 'cancelledTotal') {
-        myChart.axes[1].titleShape.text('Ratio of flights from all flights');
-    } else {
-	myChart.axes[1].titleShape.text('Amount of cancelled flights');
-    }
+    y.titleShape.text('Amount of cancelled flights');
 }
 
 // Interactive legend from http://dimplejs.org/advanced_examples_viewer.html?id=advanced_interactive_legends
@@ -107,15 +101,15 @@ function updateLegend(myChart, filterValues, e, self) {
 function updateData(cancellationType, myChart, callback) {
     d3.csv('data/top_flights_cancellations_byweek.csv', function(data) {
 	    data.forEach(function(d) {
-		    if (cancellationType === 'cancelledTotal') {
-			d.value = +d[cancellationType];
-		    } else {
-			d.value = +d[cancellationType] / +d['cancelledTotal'] * 100;
-		    }
+		    d.value = +d[cancellationType];
 		    d.Week = parseDate(d.WeekOfYear+'-2008');
 		});
 	    dataCache = data;
 
-	    callback(cancellationType);
+	    if (cancellationType == 'cancelledSecurity') {
+		callback(true);
+	    } else {
+		callback(false);
+	    }
 	});
 }
