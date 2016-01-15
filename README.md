@@ -1,7 +1,7 @@
-Summary:
+##Summary
 The visualization investigates how the cancellations are occuring during the year for several airports with the most cancellations. It also displays the different reasons for the cancellations (Carrier, Weather, NAS or Security). This visualization helps understand when cancellations happen, and more importantly: why.
 
-Design:
+##Design
 The original idea of the visualization was to display time series trends in flight cancellations within the scope of a single year. A single year was decided because the size of the single year dataset seemed fitting for the hardware available. Using a larger dataset would have been interesting, however a single years dataset already contained over 11GB of data.
 
 It was discovered, however, that there are little timeseries trends found in the data. Despite the lack of trends, the data is still displayed as a time series as that was deemed a neat way to display single events of cancellations.
@@ -14,11 +14,9 @@ Additionally, to further filter the data to focus on certain airports, the airpo
 
 To aggregate the data, mongodb and it's aggregation pipeline was used. The visualization was done by using javascript and dimple.js. The data was also validated in mongodb, but the dataset was deemed to be very clean with no erronous data.
 
-Feedback:
-
-Resources:
-http://stat-computing.org/dataexpo/2009/the-data.html
-https://docs.mongodb.org/manual/
-https://api.mongodb.org/python/current/
-https://github.com/PMSI-AlignAlytics/dimple/wiki
-http://dimplejs.org/advanced_examples_viewer.html?id=advanced_interactive_legends 
+##Resources
+- http://stat-computing.org/dataexpo/2009/the-data.html
+- https://docs.mongodb.org/manual/
+- https://api.mongodb.org/python/current/
+- https://github.com/PMSI-AlignAlytics/dimple/wiki
+- http://dimplejs.org/advanced_examples_viewer.html?id=advanced_interactive_legends 
