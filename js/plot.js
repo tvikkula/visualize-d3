@@ -61,12 +61,7 @@ function draw(data) {
 }
 
 function drawChart(myChart, filterValues, cancellationType) {
-    if (cancellationType !== 'cancelledTotal') {
-	myChart.axes[1].overrideMax = 100.0;
-    } else {
-	myChart.axes[1].overrideMax = 1500.0;
-    }
-
+    myChart.axes[1].overrideMax = 1500.0;
     myChart.data = dimple.filterData(dataCache, 'Origin', filterValues);
     myChart.draw(1000);
 
@@ -107,11 +102,7 @@ function updateLegend(myChart, filterValues, e, self) {
 function updateData(cancellationType, myChart, callback) {
     d3.csv('data/top_flights_cancellations_byweek.csv', function(data) {
 	    data.forEach(function(d) {
-		    if (cancellationType === 'cancelledTotal') {
-			d.value = +d[cancellationType];
-		    } else {
-			d.value = +d[cancellationType] / +d['cancelledTotal'] * 100;
-		    }
+		    d.value = +d[cancellationType];
 		    d.Week = parseDate(d.WeekOfYear+'-2008');
 		});
 	    dataCache = data;
