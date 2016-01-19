@@ -38,6 +38,8 @@ function draw(data) {
 
 function updateData(month, myChart) {
     if (month != 'Total') {
+	myChart.axes[1].overrideMin = 0;
+	myChart.axes[1].overrideMax = 3200;
 	myChart.data = dimple.filterData(dataCache, 'MonthOfYear', month);
     } else {
 	myChart.axes[1].overrideMin = 0;
