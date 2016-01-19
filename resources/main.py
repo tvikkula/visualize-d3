@@ -8,5 +8,8 @@ Can also call:
 - flights.getFlightCancelsByWeek()
 - flights.getTopCancelledPorts()
 - flights.getTopPortsFlightCancelsByDay()
+- flights.getTopFlightCancelsByWeek()
+- flights.getFlightCancelsByMonth()
 '''
-flights.getTopFlightCancelsByWeek()
+flights.getFlightCancelsByMonth()
+flights.getTopFlightCancelsByMonth()

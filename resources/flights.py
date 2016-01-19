@@ -291,6 +291,46 @@ class Flights:
         ]
         self.db.flights.aggregate(pipeline)
 
+    def getFlightCancelsByMonth(self):
+        '''
+        Get a collection of cancellation per month for each airport.
+
+        Function pipeline structure:
+            1. Get all Cancelled flights with origin != 'NA'
+            2. Group by Origin and Date, sum Cancelled.
+            3. Project Origin, Cancelled, Date, Reasoncode.
+            4. Sort by Cancellations.
+            5. Write to a new collection.
+        '''
+        pipeline = [
+            {
+                '$match': {
+                    'Cancelled': 1,
+                    'Origin': {'$ne': 'NA'}
+                }
+            },
+            {'$group': {
+                '_id': {'Origin': '$Origin',
+                        'MonthOfYear': {'$month': '$Date'},
+                        'CancellationCode': '$CancellationCode'
+                 },
+                'Cancelled': {'$sum': '$Cancelled'},
+            }
+            },
+            {
+                '$project': {
+                    'Origin': '$_id.Origin',
+                    'MonthOfYear': '$_id.MonthOfYear',
+                    'CancellationType': '$_id.CancellationCode',
+                    'Cancelled': 1,
+                    '_id': 0
+                }
+            },
+            {'$sort': {'Origin': -1}},
+            {'$out': 'flights_cancellations_bymonth'}
+        ]
+        self.db.flights.aggregate(pipeline)
+
     def getTopFlightCancelsByWeek(self):
         '''
         Get top flight cancels by day. The top flight cancels are defined in
@@ -316,3 +356,30 @@ class Flights:
             {'$out': 'top_flights_cancellations_byweek'}
         ]
         self.db.flights_cancellations_byweek.aggregate(pipeline)
+
+    def getTopFlightCancelsByMonth(self):
+        '''
+        Get top flight cancels by day. The top flight cancels are defined in
+        getTopCancelledPorts()-function.
+        '''
+
+        # Get top airports from top_flights_cancellations:
+        cursor = self.db.top_flights_cancellations.find(
+            {},
+            {'Origin': 1, '_id': 0}
+        )
+        # Make cursor into a list of its values:
+        topAirports = []
+        for ptr in cursor:
+            topAirports.append(ptr['Origin'])
+
+        pipeline = [
+            {
+                '$match': {
+                    'Origin': {'$in': ['ORD', 'ATL', 'LGA', 'DFW', 'IAH', 'EWR', 'BOS', 'LAX', 'JFK']}
+                }
+            },
+            {'$out': 'top_flights_cancellations_bymonth'}
+        ]
+        self.db.flights_cancellations_bymonth.aggregate(pipeline)
+
