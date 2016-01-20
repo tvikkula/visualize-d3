@@ -1,4 +1,3 @@
-var parseDate = d3.time.format("%U-%Y").parse;
 var dataCache = {};
 
 function draw(data) {
@@ -29,6 +28,14 @@ function draw(data) {
     myChart.addLegend(1000, 100, 60, 700, 'right');
 
     myChart.draw();
+
+    svg.selectAll('title_text')
+        .data(['Flight cancellation types:'])
+        .enter()
+        .append('text')
+        .attr('x', 940)
+        .attr('y', 105)
+        .text(function (d) { return d; });
 
     document.getElementById('cancellationSelect')
         .addEventListener('change', function(e) {
