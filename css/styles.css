@@ -1,5 +1,11 @@
 body {
-  font: 10px sans-serif;
+  font: 14px sans-serif;
+}
+
+.target { display: none; }
+
+#typedefinitions {
+  border: 1px solid black;
 }
 
 .axis path {
@@ -13,9 +19,9 @@ body {
 }
 
 h2 {
-    text-align: center;
+  text-align: center;
 }
 
 #selectionarea {
-    bottom: 10px;
+  bottom: 10px;
 }

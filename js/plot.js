@@ -24,7 +24,8 @@ function draw(data) {
     y.overrideMin = 0;
     y.overrideMax = 3200;
     y.title = 'Amount of cancelled flights';
-    myChart.addSeries('CancellationType', dimple.plot.bar);
+    var s = myChart.addSeries('CancellationType', dimple.plot.bar);
+    s.addOrderRule('CancellationType')
     myChart.addLegend(1000, 100, 60, 700, 'right');
 
     myChart.draw();
@@ -33,7 +34,7 @@ function draw(data) {
         .data(['Flight cancellation types:'])
         .enter()
         .append('text')
-        .attr('x', 940)
+        .attr('x', 890)
         .attr('y', 105)
         .text(function (d) { return d; });
 
@@ -41,6 +42,34 @@ function draw(data) {
         .addEventListener('change', function(e) {
                 updateData(e.currentTarget.value, myChart);
             });
+
+    document.getElementById('toggle-button').addEventListener('click', function () {
+	    toggle(document.querySelectorAll('.target'));
+	});
+
+    // Courtesy of http://stackoverflow.com/questions/21070101/show-hide-div-using-javascript:
+    function toggle (elements, specifiedDisplay) {
+	var element, index;
+
+	elements = elements.length ? elements : [elements];
+	for (index = 0; index < elements.length; index++) {
+	    element = elements[index];
+
+	    if (isElementHidden(element)) {
+		element.style.display = '';
+
+		// If the element is still hidden after removing the inline display
+		if (isElementHidden(element)) {
+		    element.style.display = specifiedDisplay || 'block';
+		}
+	    } else {
+		element.style.display = 'none';
+	    }
+	}
+	function isElementHidden (element) {
+	    return window.getComputedStyle(element, null).getPropertyValue('display') === 'none';
+	}
+    }
 }
 
 function updateData(month, myChart) {
