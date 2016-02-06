@@ -11,5 +11,6 @@ Can also call:
 - flights.getTopFlightCancelsByWeek()
 - flights.getFlightCancelsByMonth()
 '''
-flights.getFlightCancelsByMonth()
-flights.getTopFlightCancelsByMonth()
+#flights.getFlightCancelsByMonth()
+#flights.getTopFlightCancelsByMonth()
+flights.getSummaryFlightCancelsByMonth()

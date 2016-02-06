@@ -1,35 +1,54 @@
-var dataCache = {};
-
+/*
+ * A function called when a loaded dataset is drawn to the page.
+ * 
+ * @param   data  The dataset that the plot is drawn from.
+ * @returns void
+ */
 function draw(data) {
-    dataCache = data;
+    /* Define plot margins */
     var margin = {top: 0, right: 40, bottom: 20, left: 20},
 	width = 1100 - margin.left - margin.right,
         height = 530 - margin.top - margin.bottom;
 
+    /* Initiate svg with defined margins */
     var svg = d3.select('body')
 	.append('svg')
 	.attr('width', width + margin.left + margin.right)
 	.attr('height', height + margin.top + margin.bottom)
 	.append('g')
-	.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+	.attr(
+	      'transform',
+	      'translate(' + margin.left + ',' + margin.top + ')'
+	);
 
+    /* Initiate chart with defined svg and data */
     var myChart = new dimple.chart(
         svg,
-	dimple.filterData(dataCache, 'MonthOfYear', 'January')
+	data
     );
-    var x = myChart.addCategoryAxis('x', 'Origin');
-    x.title = 'Airport';
-    x.addOrderRule('Origin');
+
+    /* Define Months as x-axis */
+    var x = myChart.addCategoryAxis('x', 'MonthOfYear');
+    x.title = 'Month';
+
+    /* Define Cancelled amounts as y-axis */
     var y = myChart.addMeasureAxis('y', 'Cancelled');
-    y.overrideMin = 0;
-    y.overrideMax = 3200;
     y.title = 'Amount of cancelled flights';
-    var s = myChart.addSeries('CancellationType', dimple.plot.bar);
-    s.addOrderRule('CancellationType')
+
+    /* Add line and bubble plots as plot series */
+    myChart.addSeries('CancellationType', dimple.plot.line);
+    var s = myChart.addSeries('CancellationType', dimple.plot.bubble);
+    //    s.addOrderRule('CancellationType')
+
+    /* Add legend to plot */
     myChart.addLegend(1000, 100, 60, 700, 'right');
 
     myChart.draw();
 
+    /* Set bubble radius to something smaller */
+    svg.selectAll('circle').attr('r', 3);
+
+    /* Define custom legend title and it's location on the plot */
     svg.selectAll('title_text')
         .data(['Flight cancellation types:'])
         .enter()
@@ -38,16 +57,21 @@ function draw(data) {
         .attr('y', 105)
         .text(function (d) { return d; });
 
-    document.getElementById('cancellationSelect')
-        .addEventListener('change', function(e) {
-                updateData(e.currentTarget.value, myChart);
-            });
-
-    document.getElementById('toggle-button').addEventListener('click', function () {
+    /* Add toggle-button event handler */
+    document.getElementById('toggle-button')
+	.addEventListener('click', function () {
 	    toggle(document.querySelectorAll('.target'));
 	});
 
-    // Courtesy of http://stackoverflow.com/questions/21070101/show-hide-div-using-javascript:
+    /* 
+     * Courtesy of
+     * http://stackoverflow.com/questions/21070101/show-hide-div-using-javascript.
+     * Toggles the metadata block on and off using just Javascript.
+     *
+     * @param   elements          Html elements to be toggled
+     * @param   specifiedDisplay  Specified display style if given.
+     * @returns void
+     */
     function toggle (elements, specifiedDisplay) {
 	var element, index;
 
@@ -58,7 +82,8 @@ function draw(data) {
 	    if (isElementHidden(element)) {
 		element.style.display = '';
 
-		// If the element is still hidden after removing the inline display
+		// If the element is still hidden after removing
+		// the inline display
 		if (isElementHidden(element)) {
 		    element.style.display = specifiedDisplay || 'block';
 		}
@@ -67,20 +92,8 @@ function draw(data) {
 	    }
 	}
 	function isElementHidden (element) {
-	    return window.getComputedStyle(element, null).getPropertyValue('display') === 'none';
+	    return window.getComputedStyle(element, null)
+		.getPropertyValue('display') === 'none';
 	}
     }
-}
-
-function updateData(month, myChart) {
-    if (month != 'Total') {
-	myChart.axes[1].overrideMin = 0;
-	myChart.axes[1].overrideMax = 3200;
-	myChart.data = dimple.filterData(dataCache, 'MonthOfYear', month);
-    } else {
-	myChart.axes[1].overrideMin = 0;
-	myChart.axes[1].overrideMax = 16000;
-	myChart.data = dataCache;
-    }
-    myChart.draw(1000);
 }

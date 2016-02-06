@@ -357,6 +357,28 @@ class Flights:
         ]
         self.db.flights_cancellations_byweek.aggregate(pipeline)
 
+
+    def getSummaryFlightCancelsByMonth(self):
+        pipeline = [
+            {'$group': {
+                '_id': {'MonthOfYear': '$MonthOfYear',
+                        'CancellationType': '$CancellationType'
+                 },
+                'Cancelled': {'$sum': '$Cancelled'},
+            }
+            },
+            {
+                '$project': {
+                    'MonthOfYear': '$_id.MonthOfYear',
+                    'CancellationType': '$_id.CancellationType',
+                    'Cancelled': 1,
+                    '_id': 0
+                }
+            },
+            {'$sort': {'MonthOfYear': 1}},
+            {'$out': 'summary_flights_cancellations_bymonth'}
+        ]
+        self.db.flights_cancellations_bymonth.aggregate(pipeline)
     def getTopFlightCancelsByMonth(self):
         '''
         Get top flight cancels by day. The top flight cancels are defined in
