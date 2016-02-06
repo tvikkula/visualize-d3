@@ -1,12 +1,12 @@
 ##Summary
-The visualization investigates how the cancellations are occuring during the year for several airports with the most cancellations. It also displays the different reasons for the cancellations (Carrier, Weather, NAS or Security). This visualization helps understand when cancellations happen, and more importantly: why.
+The visualization investigates how the cancellations are occuring during the year. It also displays the different reasons for the cancellations (Carrier, Weather, NAS or Security). This visualization helps understand if cancellations types have any correlation with the time of year.
 
 ##Design
 The original idea of the visualization was to display time series trends in flight cancellations within the scope of a single year. A single year was decided because the size of the single year dataset seemed fitting for the hardware available. Using a larger dataset would have been interesting, however a single years dataset already contained over 11GB of data.
 
-The visualization was decided to be a lineplot with time series in the X-axis and Cancellation amounts in the y-axis, where Cancellation amounts are a quantitative variable and the timeseries are (kind of) a quantitative variable as well. Using a lineplot to visualize time series is a good way to discover time-based trends in the data, therefore using it seemed natural. A time series line was plotted for each airport in order to see differences in cancellations between Airports. Additionally, since Cancellation reason codes existed in the dataset, they were included in the visualization as filters. The Cancellation reasons were a qualitative variable, making it a suitable filter for the visualization. Therefore the visualization could be filtered to show total values for Cancellations in 2008, or filtered by a certain cancellation reason.
+The visualization was decided to be a lineplot with time series in the X-axis and Cancellation amounts in the y-axis, where Cancellation amounts are a quantitative variable and the timeseries are (kind of) a quantitative variable as well. Using a lineplot to visualize time series is a good way to discover time-based trends in the data, therefore using it seemed natural. Additionally, a scatterplot was overlayed on top of the lineplot to make distinctions between months easier. A lineplot was created for each Cancellation type to distinguish the differences between each type better. The Months were initially numerical values, but that was changed to text abbreviations which seem to fit the visualization of Months better. To reduce confusion in the Cancellation types, summaries of the types were added under a togglable button.
 
-As there are quite a few Airports in the US, this design made the visualization initially incredibly crowded, making it impossible to discern any patterns from the visualization. Therefore, the amount of Airports in the visualization was reduced greatly, finally to only 9 airports with the most cancellations during 2008. Additionally, togglable filters were added to the Airport legend in order for the viewer to filter out Airports they did not want to view from the visualization. The time series was initially visualized as days, and that seemed very crowded as well. Therefore weeks was used instead to summarize the time series data a bit better.
+Initially, the plot displayed cancellation values for single Airports. As there are quite a few Airports in the US, this design made the visualization initially incredibly crowded, making it impossible to discern any patterns from the visualization. Therefore, the amount of Airports in the visualization was reduced greatly, finally to only 9 airports with the most cancellations during 2008. Additionally, togglable filters were added to the Airport legend in order for the viewer to filter out Airports they did not want to view from the visualization. The time series was initially visualized as days, and that seemed very crowded as well. Therefore weeks was used instead to summarize the time series data a bit better.
 
 Unfortunately, even on a weekly level, trends were very difficult to discover. There seemed to be some spikes on certain weeks while on most weeks the cancellation amount seemed quite constant.
 
@@ -18,7 +18,9 @@ The scales, ordering and colors were designed to be static in order to make it e
 
 Finally, the coloring of the plot were considered to be made color-blind friendly, but that ended up to be a bit too much for my knowledge on color-blindedness in general. It was hence deemed to be out of scope.
 
-The previous lineplot design is in the previous/-folder of the project directory.
+Due to feedback it was realized that the visualization still was too exploratory, it visualized multiple patterns and it was difficult distinguish a main takeaway from the plot. Therefore the plot needed to focus more on a single pattern and focus on explaining that story. This required a further reduction in the dimensions of the plot to focus on a single, easy-to-distinguish pattern. Therefore the plot was further re-designed to only focus on patterns between time (months of the year) and types of Cancellations. Therefore, the single Airports were basically omitted from the plot. This way, it seems far easier to distinguish temporal patterns in the visualization.
+
+The previous designs are in previous/- and previous-060216/-folders of the project directory.
 
 ##Feedback
 
@@ -49,6 +51,12 @@ The previous lineplot design is in the previous/-folder of the project directory
 - Added description tooltip for the Cancellation reasons, they were quite unclear even to me.
 - Colorblind-friendly visuals was something I ended up not doing, mostly due to my lack of knowledge in how to design visuals that are distinguishable to all forms of color-blindedness.
 - I thought the legend ordering was correct, therefore I maintained this as more a matter of opinion than anything else. Additionally, this ended up to be a bit difficult to fix as the sorting of data seemed to affect both the plot and the legend.
+
+*4th feedback:*
+- This is a great exploratory chart, but I don't really see an explanatory story yet. There seemed to be many relationships and stories displayed on the plot and that made it difficult for the viewer to have a main takeaway from the plot. The readers attention is not focused on a single finding which should be the cornerstone of a good explanatory visualization.
+
+*Answers for 4th feedback:*
+- The plot was further re-designed to really focus on being explanatory and tell the story of a single pattern in the data. Patterns between time (months) and cancellation types was decided as primary pattern being shown. The visual encodings were also changed significantly to adjust.
 
 
 ##Resources
