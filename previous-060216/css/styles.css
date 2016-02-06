@@ -1,0 +1,27 @@
+body {
+  font: 14px sans-serif;
+}
+
+.target { display: none; }
+
+#typedefinitions {
+  border: 1px solid black;
+}
+
+.axis path {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+h2 {
+  text-align: center;
+}
+
+#selectionarea {
+  bottom: 10px;
+}

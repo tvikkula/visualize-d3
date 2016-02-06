@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="http://dimplejs.org/dist/dimple.v2.0.0.min.js"></script>
+    <script src="js/plot.js"></script>
+  </head>
+  <body>
+    <h2>Cancellation amounts and their reasons for a set of airports with the most cancellations in the US for each month during year 2008</h2>
+    <div id="metainformation">
+      <button id="toggle-button">Toggle to display explanations of flight cancellation types</button>
+      <div id="typedefinitions" class="target">
+	<p><b>Air Carrier:</b> The cause of the cancellation or delay was due to circumstances within the airline's control (e.g. maintenance or crew problems, aircraft cleaning, baggage loading, fueling, etc.).</p>
+	<p><b>Extreme weather:</b> Significant meteorological conditions (actual or forecasted) that, in the judgment of the carrier, delays or prevents the operation of a flight such as tornado, blizzard or hurricane.</p>
+	<p><b>National Aviation System (NAS):</b> Delays and cancellations attributable to the national aviation system that refer to a broad set of conditions, such as non-extreme weather conditions, airport operations, heavy traffic volume, and air traffic control.</p>
+	<p><b>Security:</b> Delays or cancellations caused by evacuation of a terminal or concourse, re-boarding of aircraft because of security breach, inoperative screening equipment and/or long lines in excess of 29 minutes at screening areas.</p>
+      </div>
+      <div id="selectionarea">
+	<p id="cancellationLabel">Select a month in which to check flight cancellations:</p>
+	<select id="cancellationSelect">
+	  <option value="January" selected="selected">January</option>
+	  <option value="February">February</option>
+	  <option value="March">March</option>
+	  <option value="April">April</option>
+	  <option value="May">May</option>
+	  <option value="June">June</option>
+          <option value="July">July</option>
+          <option value="August">August</option>
+	  <option value="September">September</option>
+          <option value="October">October</option>
+          <option value="November">November</option>
+          <option value="December">December</option>
+	  <option value="Total">Total</option>
+	</select>
+      </div>
+    </div>
+    <script type="text/javascript">
+      /*
+      Use D3 (not dimple.js) to load the TSV file
+      and pass the contents of it to the draw function
+      */
+      d3.csv("data/top_flights_cancellations_bymonth.csv", draw);
+    </script>
+  </body>
+</html>
