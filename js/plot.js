@@ -27,8 +27,13 @@ function draw(data) {
 	data
     );
 
-    /* Define Months as x-axis */
+    /* Define Months as x-axis, sort them in proper order */
     var x = myChart.addCategoryAxis('x', 'MonthOfYear');
+    x.addOrderRule(
+		   ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul',
+		    'Aug', 'Sep', 'Oct', 'Nov','Dec'],
+		   desc= false
+		   );
     x.title = 'Month';
 
     /* Define Cancelled amounts as y-axis */
@@ -37,8 +42,7 @@ function draw(data) {
 
     /* Add line and bubble plots as plot series */
     myChart.addSeries('CancellationType', dimple.plot.line);
-    var s = myChart.addSeries('CancellationType', dimple.plot.bubble);
-    //    s.addOrderRule('CancellationType')
+    myChart.addSeries('CancellationType', dimple.plot.bubble);
 
     /* Add legend to plot */
     myChart.addLegend(1000, 100, 60, 700, 'right');
