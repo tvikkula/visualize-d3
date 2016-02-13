@@ -36,9 +36,10 @@ function draw(data) {
 		   );
     x.title = 'Month';
 
-    /* Define Cancelled amounts as y-axis */
-    var y = myChart.addMeasureAxis('y', 'Cancelled');
-    y.title = 'Amount of cancelled flights';
+    /* Define Cancelled percentages as y-axis */
+    var y = myChart.addMeasureAxis('y', 'CancelledPercentage');
+    y.title = 'Cancelled flights percentage from all flights';
+    y.tickFormat = ',.1%';
 
     /* Add line and bubble plots as plot series */
     myChart.addSeries('CancellationType', dimple.plot.line);

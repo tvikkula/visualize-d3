@@ -290,49 +290,75 @@ class Flights:
             {'$out': 'flights_cancellations_byweek'}
         ]
         self.db.flights.aggregate(pipeline)
-
-    def getFlightCancelsByMonth(self):
+    def totalFlightsByMonth(self):
+        pipeline = [
+            {
+                '$match': {
+                    'Origin': {'$ne': 'NA'}
+                }
+            },
+            {
+                '$group': {
+                    '_id': {
+                        'MonthOfYear': {'$month': '$Date'},
+                    },
+                    'Total': {'$sum': 1 }
+                }
+            },
+            {
+                '$project': {
+                    'MonthOfYear': '$_id.MonthOfYear',
+                    'Total': 1,
+                    '_id': 0
+                }
+            },
+            {'$sort': {'MonthOfYear': -1}},
+            {'$out': 'summary_flights_total_bymonth'}
+        ]
+        self.db.flights.aggregate(pipeline)
+    def getSummaryFlightCancelsByMonth(self):
         '''
-        Get a collection of cancellation per month for each airport.
+        Get a collection of cancellation ratios per month.
 
-        Function pipeline structure:
-            1. Get all Cancelled flights with origin != 'NA'
-            2. Group by Origin and Date, sum Cancelled.
-            3. Project Origin, Cancelled, Date, Reasoncode.
-            4. Sort by Cancellations.
-            5. Write to a new collection.
         '''
         pipeline = [
             {
                 '$match': {
-                    'Cancelled': 1,
                     'Origin': {'$ne': 'NA'}
                 }
             },
-            {'$group': {
-                '_id': {'Origin': '$Origin',
+            {
+                '$group': {
+                    '_id': {
                         'MonthOfYear': {'$month': '$Date'},
                         'CancellationCode': '$CancellationCode'
-                 },
-                'Cancelled': {'$sum': '$Cancelled'},
-            }
+                    },
+                    'Cancelled': {'$sum': '$Cancelled'},
+                    'Total': {'$sum': 1 }
+                }
             },
-            {
-                '$project': {
-                    'Origin': '$_id.Origin',
-                    'MonthOfYear': '$_id.MonthOfYear',
-                    'CancellationType': '$_id.CancellationCode',
+            {                                                                                                                                                                       
+                '$project': {                                                                                                                                                       
+                    'MonthOfYear': '$_id.MonthOfYear',                                                                                                                              
+                    'CancellationType': '$_id.CancellationCode',                                                                                                                    
                     'Cancelled': 1,
+                    'Total': 1,
                     '_id': 0
                 }
             },
-            {'$sort': {'Origin': -1}},
-            {'$out': 'flights_cancellations_bymonth'}
+            {'$sort': {'MonthOfYear': -1}},
+            {'$out': 'summary_flights_cancellations_bymonth'}
         ]
         self.db.flights.aggregate(pipeline)
 
     def getTopFlightCancelsByWeek(self):
         '''
+        'CancelledPercentage': {'$multiply':
+                        [
+                                100,
+                                {'$divide': ['$Cancelled', '$Total'] }
+                        ]
+                    },
         Get top flight cancels by day. The top flight cancels are defined in
         getTopCancelledPorts()-function.
         '''
@@ -358,27 +384,6 @@ class Flights:
         self.db.flights_cancellations_byweek.aggregate(pipeline)
 
 
-    def getSummaryFlightCancelsByMonth(self):
-        pipeline = [
-            {'$group': {
-                '_id': {'MonthOfYear': '$MonthOfYear',
-                        'CancellationType': '$CancellationType'
-                 },
-                'Cancelled': {'$sum': '$Cancelled'},
-            }
-            },
-            {
-                '$project': {
-                    'MonthOfYear': '$_id.MonthOfYear',
-                    'CancellationType': '$_id.CancellationType',
-                    'Cancelled': 1,
-                    '_id': 0
-                }
-            },
-            {'$sort': {'MonthOfYear': 1}},
-            {'$out': 'summary_flights_cancellations_bymonth'}
-        ]
-        self.db.flights_cancellations_bymonth.aggregate(pipeline)
     def getTopFlightCancelsByMonth(self):
         '''
         Get top flight cancels by day. The top flight cancels are defined in
