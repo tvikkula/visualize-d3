@@ -24,7 +24,7 @@ The visualization was then changed to display percentages of cancelled flights, 
 
 Additionally, since the patterns in the visualization were quite unclear, it was decided that the dataset needed to be drastically larger. Therefore, instead of just viewing data from year 2008, data from years 2004-2008 are visualized instead.
 
-Finally, the NAS- and Carrier-cancellations were removed since they did not show any significant temporal patterns. And to emphasize that the Weather-cancellations are significantly higher during the winter-months, the points in the visualization are colored to emphasize that.
+Finally, the NAS- and Carrier-cancellations were removed since they did not show any significant temporal patterns. And to emphasize that the Weather-cancellations are significantly higher during the winter-months, the points in the visualization are color-encoded to emphasize the higher winter-months.
 
 The previous designs are in previous/- and previous-060216/-folders of the project directory.
 
