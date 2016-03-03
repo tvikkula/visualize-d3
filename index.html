@@ -8,16 +8,7 @@
     <script src="js/plot.js"></script>
   </head>
   <body>
-    <h2>Flight cancellation amounts by month for each type of Cancellation in the US, years 2004-2008</h2>
-    <div id="metainformation">
-      <button id="toggle-button">Toggle to display explanations of flight cancellation types</button>
-      <div id="typedefinitions" class="target">
-	<p><b>Air Carrier:</b> The cause of the cancellation or delay was due to circumstances within the airline's control (e.g. maintenance or crew problems, aircraft cleaning, baggage loading, fueling, etc.).</p>
-	<p><b>Extreme weather:</b> Significant meteorological conditions (actual or forecasted) that, in the judgment of the carrier, delays or prevents the operation of a flight such as tornado, blizzard or hurricane.</p>
-	<p><b>National Aviation System (NAS):</b> Delays and cancellations attributable to the national aviation system that refer to a broad set of conditions, such as non-extreme weather conditions, airport operations, heavy traffic volume, and air traffic control.</p>
-	<p><b>Security:</b> Delays or cancellations caused by evacuation of a terminal or concourse, re-boarding of aircraft because of security breach, inoperative screening equipment and/or long lines in excess of 29 minutes at screening areas.</p>
-      </div>
-    </div>
+    <h2>How flight cancellations due to Weather change depending on the Month during years 2004-2008</h2>
     <script type="text/javascript">
       /* Use d3 to load csv, run draw() on it */
       d3.csv("data/summary_flights_cancellations_bymonth.csv", draw);

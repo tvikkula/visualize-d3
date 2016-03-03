@@ -28,7 +28,7 @@ function draw(data) {
     );
 
     /* Define Months as x-axis, sort them in proper order */
-    var x = myChart.addCategoryAxis('x', 'MonthOfYear');
+    var x = myChart.addCategoryAxis('x', 'Month');
     x.addOrderRule(
 		   ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul',
 		    'Aug', 'Sep', 'Oct', 'Nov','Dec'],
@@ -38,67 +38,31 @@ function draw(data) {
 
     /* Define Cancelled percentages as y-axis */
     var y = myChart.addMeasureAxis('y', 'CancelledPercentage');
-    y.title = 'Cancelled flights percentage from all flights';
+    y.title = 'Percentage of flights cancelled due to weather';
     y.tickFormat = ',.1%';
 
     /* Add line and bubble plots as plot series */
-    myChart.addSeries('CancellationType', dimple.plot.line);
-    myChart.addSeries('CancellationType', dimple.plot.bubble);
+    myChart.addSeries(null, dimple.plot.line);
+    var bubbles = myChart.addSeries('Significant', dimple.plot.bubble);
 
-    /* Add legend to plot */
-    myChart.addLegend(1000, 100, 60, 700, 'right');
+    /* Assign more distinguishable colors and opacity between Significant
+       and non-Significant points. */
+    myChart.assignColor('1', 'red', 'black', 1);
+    myChart.assignColor('0', 'blue', 'grey', 0.8);
+
+    /* Assign a custom tooltip to omit unnecessary data and to clean
+       title text up. */
+    bubbles.getTooltipText = function (e) {
+	console.log(e);
+	return [
+		'Month: ' + e.x + ',',
+		'Cancellation percentage: ' + e.y * 100 + '%'
+	];
+    };
 
     myChart.draw();
 
     /* Set bubble radius to something smaller */
     svg.selectAll('circle').attr('r', 3);
 
-    /* Define custom legend title and it's location on the plot */
-    svg.selectAll('title_text')
-        .data(['Flight cancellation types:'])
-        .enter()
-        .append('text')
-        .attr('x', 890)
-        .attr('y', 105)
-        .text(function (d) { return d; });
-
-    /* Add toggle-button event handler */
-    document.getElementById('toggle-button')
-	.addEventListener('click', function () {
-	    toggle(document.querySelectorAll('.target'));
-	});
-
-    /* 
-     * Courtesy of
-     * http://stackoverflow.com/questions/21070101/show-hide-div-using-javascript.
-     * Toggles the metadata block on and off using just Javascript.
-     *
-     * @param   elements          Html elements to be toggled
-     * @param   specifiedDisplay  Specified display style if given.
-     * @returns void
-     */
-    function toggle (elements, specifiedDisplay) {
-	var element, index;
-
-	elements = elements.length ? elements : [elements];
-	for (index = 0; index < elements.length; index++) {
-	    element = elements[index];
-
-	    if (isElementHidden(element)) {
-		element.style.display = '';
-
-		// If the element is still hidden after removing
-		// the inline display
-		if (isElementHidden(element)) {
-		    element.style.display = specifiedDisplay || 'block';
-		}
-	    } else {
-		element.style.display = 'none';
-	    }
-	}
-	function isElementHidden (element) {
-	    return window.getComputedStyle(element, null)
-		.getPropertyValue('display') === 'none';
-	}
-    }
 }

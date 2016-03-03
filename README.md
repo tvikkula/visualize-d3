@@ -1,5 +1,5 @@
 ##Summary
-The visualization investigates how the cancellations are occuring during different months of a year. It also displays the different reasons for the cancellations (Carrier, Weather, NAS or Security). This visualization helps understand if cancellations types have any correlation with the time of year. The data used is gathered from a span of years 2004 to 2008 to omit yearly outliers from the visualization.
+The visualization describes how different times of year are affecting the amount of cancellations caused by Weather. The data used is gathered from a span of years 2004 to 2008 to omit yearly outliers from the visualization.
 
 ##Design
 The original idea of the visualization was to display time series trends in flight cancellations within the scope of a single year. A single year was decided because the size of the single year dataset seemed fitting for the hardware available. Using a larger dataset would have been interesting, however a single years dataset already contained over 11GB of data.
@@ -23,6 +23,8 @@ Due to feedback it was realized that the visualization still was too exploratory
 The visualization was then changed to display percentages of cancelled flights, because simple amounts did not quite describe the patterns that are being described in the visualization. The ratios will make it easier to distinguish whether the cancellation ratios are truly meaningful instead of just high due to there just being significantly more flights at certain times of the year.
 
 Additionally, since the patterns in the visualization were quite unclear, it was decided that the dataset needed to be drastically larger. Therefore, instead of just viewing data from year 2008, data from years 2004-2008 are visualized instead.
+
+Finally, the NAS- and Carrier-cancellations were removed since they did not show any significant temporal patterns. And to emphasize that the Weather-cancellations are significantly higher during the winter-months, the points in the visualization are colored to emphasize that.
 
 The previous designs are in previous/- and previous-060216/-folders of the project directory.
 
