@@ -300,7 +300,7 @@ class Flights:
             {
                 '$group': {
                     '_id': {
-                        'MonthOfYear': {'$month': '$Date'},
+                        'MonthOfYear': '$Month',
                     },
                     'Total': {'$sum': 1 }
                 }
@@ -330,7 +330,7 @@ class Flights:
             {
                 '$group': {
                     '_id': {
-                        'MonthOfYear': {'$month': '$Date'},
+                        'MonthOfYear': '$Month',
                         'CancellationCode': '$CancellationCode'
                     },
                     'Cancelled': {'$sum': '$Cancelled'},

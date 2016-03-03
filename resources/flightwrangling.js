@@ -71,4 +71,4 @@ db.summary_flights_cancellations_bymonth.find().forEach(
     }
 );
 
-db.summary_flights_cancellations_bymonth.remove({ '$or': [{CancellationType: ''}, {CancellationType: 'Security'} ] })
+db.summary_flights_cancellations_bymonth.remove({ '$or': [{CancellationType: ''}, {CancellationType: 'Security'} ] });
